@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { ChevronDown, FrontifyLogo, HamburgerIcon } from "./icons";
 
 const ITEMS = [
@@ -13,26 +10,15 @@ const ITEMS = [
 ];
 
 export function SiteNavbar() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className="fixed inset-x-0 top-4 z-50 mx-4 md:mx-6"
-      style={{ transition: "transform 0.25s ease" }}
-    >
+    <header className="fixed inset-x-0 top-4 z-50 mx-4 md:mx-6">
       <nav
-        className="mx-auto flex max-w-[1408px] items-center justify-between rounded-full px-3 py-2 shadow-[0_2px_18px_rgba(17,17,16,0.08)] backdrop-blur"
+        className="mx-auto flex max-w-[1408px] items-center justify-between rounded-full px-3 py-2"
         style={{
-          background: scrolled ? "rgba(240,240,235,0.92)" : "rgba(240,240,235,0.78)",
+          background: "rgba(240,240,235,0.8)",
+          backdropFilter: "blur(200px)",
+          WebkitBackdropFilter: "blur(200px)",
           color: "#111110",
-          transition: "background 0.3s ease",
         }}
       >
         {/* Logo */}

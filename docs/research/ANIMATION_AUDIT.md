@@ -2,7 +2,36 @@
 
 Captured by scrolling https://www.frontify.com/en at 1408×715 viewport and comparing to my localhost build.
 
-The original is a Webflow site driving **GSAP ScrollTrigger pin scenes** through **Lenis** smooth scroll. Section heights are dynamic — once a pin scene activates, GSAP injects a `pin-spacer` that grows the section to several viewports tall.
+The original is a **Webflow + IX2** site driving its scroll animations natively (no GSAP) through **Lenis** smooth scroll. Section heights are dynamic via IX2 pin/scroll mechanics. Animation timing is exposed at runtime via `window.Webflow.require("ix2").store.getState().ixData` — 165 events, 80 action lists.
+
+## Measured timings (2026-05-25, via chrome-devtools-mcp)
+
+Pulled directly from Webflow IX2's action-list definitions on the live site:
+
+| Pattern | Source action list | Duration | Easing | Y delta |
+|---|---|---:|---|---:|
+| **Section reveal (dominant — used 13×)** | a-87 "Filter Nav [Scroll In]" | 400ms | `ease` (CSS default) | 50px slide |
+| Section out | a-88 "Product Nav [Scroll Out]" | 400ms | `ease` | 50px slide back |
+| Feature image fade-in | a-56 | 600ms | `ease` | opacity only |
+| Hero bg overlay/blur | a-73 "Home Hero [Scroll Down]" | 1400ms | `ease` | opacity to 0.8 |
+| Pin scene fade (`.home_hero-row`) | a-79 SCROLL_PROGRESS | scrubbed kf 50→56 | linear (parameter) | opacity 1→0 |
+| Hover-in icon slide | a-15 "Link [Hover - In]" | 300ms | `outQuart` | translateX 8px |
+| Pill button bg | inline `transition: background-color 0.2s` | 200ms | default `ease` | — |
+| Navbar bg transition | inline `transition: background-color 0.26s` on `.ff-navbar-content` | 0.26s | default `ease` | bg **never changes** on scroll |
+
+**Key finding:** the original uses plain CSS `ease` (cubic-bezier(0.25, 0.1, 0.25, 1)) almost everywhere — *not* a custom curve. The clone was over-easing with `[0.22, 1, 0.36, 1]` (easeOutExpo) at 700–800ms, making reveals feel slow and floaty compared to the snappier 400ms `ease` original.
+
+## Changes applied this session
+
+- **`SiteNavbar.tsx`** — dropped the `scrolled` state entirely (original nav bg never changes on scroll), removed the `shadow-[...]` box-shadow (original has `none`), replaced Tailwind's `backdrop-blur` (12px) with inline `backdropFilter: blur(200px)` to match. Removed `"use client"` since no hooks remain.
+- **`AssistantSection.tsx`** — three reveals changed from `duration: 0.7/0.8/0.5s, ease: [0.22, 1, 0.36, 1]` to `duration: 0.4s, ease: "easeOut"`; fadeUp Y delta bumped from 32 to 50px to match a-87. Title→content delay reduced from 0.15s to 0.1s.
+- **`globals.css` `.pill`** — added `.pill > svg` rule with `transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)` (= `outQuart`) and `:hover` translateX 4px. Matches the IX2 a-15 sample for chevron/arrow icons (used 8px on theirs; 4px reads better at our smaller icon sizes).
+
+The `HeroToUpload` sticky-pin scene was left alone — it's a creative reinterpretation that combines hero + partner + upload into one 500vh section, where the original has three separate sections. The progress ranges work and changing them would be redesign, not polish.
+
+---
+
+## Original site architecture (legacy notes, kept for context)
 
 | Section | Original height | Approx scroll budget | Mine now | Status |
 |---|---:|---:|---:|---|

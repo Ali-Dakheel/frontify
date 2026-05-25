@@ -13,7 +13,7 @@ const TURNS = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0 },
 };
 
@@ -33,7 +33,7 @@ export function AssistantSection() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         variants={fadeUp}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <SectionHead
           title={<>Work with your AI brand expert</>}
@@ -46,7 +46,7 @@ export function AssistantSection() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
         variants={fadeUp}
-        transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
         className="mx-auto mt-12 w-[min(640px,92vw)] md:mt-14"
       >
         <div
@@ -70,7 +70,7 @@ export function AssistantSection() {
                   key={i}
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className={
                     "max-w-[85%] rounded-2xl px-4 py-3 text-sm " +
                     (t.from === "assistant" ? "bg-transparent text-ink" : "ml-auto bg-paper text-ink")

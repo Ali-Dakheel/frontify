@@ -151,6 +151,12 @@
   white-space: nowrap;
   text-decoration: none;
 }
+.pill > svg {
+  transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.pill:hover > svg {
+  transform: translateX(4px);
+}
 .pill-dark   { background: #111110; color: #f0f0eb; }
 .pill-dark:hover { background: #2a2a28; }
 .pill-light  { background: #f0f0eb; color: #111110; border: 1px solid #cbcbc5; }
